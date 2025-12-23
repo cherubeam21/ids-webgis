@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIJAGO POLMAN</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
@@ -12,30 +13,47 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
-        body { background-color: #f8fafc; }
-        #map { height: 500px; width: 100%; border-radius: 24px; z-index: 1; }
-        .sidebar-scroll { max-height: 400px; overflow-y: auto; }
+        body {
+            background-color: #f8fafc;
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 24px;
+            z-index: 1;
+        }
+
+        .sidebar-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+        }
     </style>
 </head>
+
 <body>
 
     <header class="bg-white shadow-sm px-8 py-4 flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-2">
-            <div class="bg-blue-600 p-2 rounded-lg text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            </div>
+
+            <img src="/logo_polman.png" height="50" , width="50" />
+
+
             <h1 class="font-bold text-xl text-slate-800">SIJAGO POLMAN</h1>
         </div>
         <nav class="hidden md:flex gap-2 text-sm font-medium text-slate-500 bg-slate-100 p-1 rounded-full">
-            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-2 rounded-full transition-all text-slate-600 hover:text-blue-600">Dashboard</button>
-            <button onclick="switchTab('peta')" id="nav-peta" class="px-4 py-2 rounded-full transition-all text-slate-600 hover:text-blue-600">Peta Analisis</button>
-            <button onclick="switchTab('about')" id="nav-about" class="px-4 py-2 rounded-full transition-all text-slate-600 hover:text-blue-600">About</button>
+            <button onclick="switchTab('dashboard')" id="nav-dashboard"
+                class="px-4 py-2 rounded-full transition-all text-slate-600 hover:text-blue-600">Dashboard</button>
+            <button onclick="switchTab('peta')" id="nav-peta"
+                class="px-4 py-2 rounded-full transition-all text-slate-600 hover:text-blue-600">Peta Analisis</button>
+            <button onclick="switchTab('about')" id="nav-about"
+                class="px-4 py-2 rounded-full transition-all text-slate-600 hover:text-blue-600">About</button>
         </nav>
         <div class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">US User Access</div>
     </header>
 
     <main class="max-w-[1400px] mx-auto p-8">
-        
+
         <!-- SECTION: DASHBOARD -->
         <div id="section-dashboard" class="space-y-6">
             <div class="mb-8">
@@ -49,7 +67,11 @@
                     <!-- Card 1 -->
                     <div class="bg-white p-5 rounded-[20px] shadow-sm border border-slate-100 flex items-center gap-4">
                         <div class="p-3 bg-green-100 text-green-600 rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
                         </div>
                         <div>
                             <p class="text-2xl font-bold text-slate-800" id="dash-total-layer">0</p>
@@ -59,7 +81,11 @@
                     <!-- Card 2 -->
                     <div class="bg-white p-5 rounded-[20px] shadow-sm border border-slate-100 flex items-center gap-4">
                         <div class="p-3 bg-purple-100 text-purple-600 rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
                         </div>
                         <div>
                             <p class="text-2xl font-bold text-slate-800">14</p>
@@ -69,7 +95,13 @@
                     <!-- Card 3 -->
                     <div class="bg-white p-5 rounded-[20px] shadow-sm border border-slate-100 flex items-center gap-4">
                         <div class="p-3 bg-blue-100 text-blue-600 rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
                         </div>
                         <div>
                             <p class="text-2xl font-bold text-slate-800">Polman</p>
@@ -79,7 +111,11 @@
                     <!-- Card 4 -->
                     <div class="bg-white p-5 rounded-[20px] shadow-sm border border-slate-100 flex items-center gap-4">
                         <div class="p-3 bg-orange-100 text-orange-600 rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                         </div>
                         <div>
                             <p class="text-2xl font-bold text-slate-800">2025</p>
@@ -90,18 +126,26 @@
 
                 <!-- Center Column: Visual / Main Feature -->
                 <div class="col-span-12 lg:col-span-6">
-                    <div class="bg-white p-8 rounded-[32px] shadow-md border border-slate-100 h-full flex flex-col items-center justify-center text-center relative overflow-hidden">
+                    <div
+                        class="bg-white p-8 rounded-[32px] shadow-md border border-slate-100 h-full flex flex-col items-center justify-center text-center relative overflow-hidden">
                         <div class="absolute inset-0 bg-blue-50 opacity-50 z-0"></div>
-                        <div class="absolute w-64 h-64 bg-blue-200 rounded-full blur-3xl -top-10 -left-10 opacity-30"></div>
-                        <div class="absolute w-64 h-64 bg-purple-200 rounded-full blur-3xl -bottom-10 -right-10 opacity-30"></div>
-                        
+                        <div class="absolute w-64 h-64 bg-blue-200 rounded-full blur-3xl -top-10 -left-10 opacity-30">
+                        </div>
+                        <div
+                            class="absolute w-64 h-64 bg-purple-200 rounded-full blur-3xl -bottom-10 -right-10 opacity-30">
+                        </div>
+
                         <div class="relative z-10">
-                            <div class="w-48 h-48 bg-white rounded-full shadow-xl flex items-center justify-center mx-auto mb-6 border-4 border-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <div
+                                class="w-48 h-48 bg-white rounded-full shadow-xl flex items-center justify-center mx-auto mb-6 border-4 border-white">
+                              <img src="/logo_polman.png" height="200", width="200" />
                             </div>
                             <h3 class="text-2xl font-bold text-slate-800 mb-2">Peta Interaktif Kab. Polewali Mandar</h3>
-                            <p class="text-slate-500 max-w-md mx-auto mb-6">Visualisasi data geospasial mencakup aspek administrasi, kebencanaan, dan tata ruang wilayah Kabupaten Polewali Mandar, Provinsi Sulawesi Barat dalam satu platform terintegrasi.</p>
-                            <button onclick="switchTab('peta')" class="bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-blue-700 transition-all hover:scale-105">
+                            <p class="text-slate-500 max-w-md mx-auto mb-6">Visualisasi data geospasial mencakup aspek
+                                administrasi, kebencanaan, dan tata ruang wilayah Kabupaten Polewali Mandar, Provinsi
+                                Sulawesi Barat dalam satu platform terintegrasi.</p>
+                            <button onclick="switchTab('peta')"
+                                class="bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-blue-700 transition-all hover:scale-105">
                                 Buka Peta Analisis
                             </button>
                         </div>
@@ -114,8 +158,12 @@
                         <h4 class="font-bold text-slate-700 mb-4">Komposisi Data</h4>
                         <div class="relative w-32 h-32 mx-auto mb-4">
                             <svg viewBox="0 0 36 36" class="w-full h-full transform -rotate-90">
-                                <path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.8" />
-                                <path class="text-blue-500" stroke-dasharray="70, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.8" />
+                                <path class="text-slate-100"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none" stroke="currentColor" stroke-width="3.8" />
+                                <path class="text-blue-500" stroke-dasharray="70, 100"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none" stroke="currentColor" stroke-width="3.8" />
                             </svg>
                             <div class="absolute inset-0 flex items-center justify-center flex-col">
                                 <span class="text-2xl font-bold text-slate-800">70%</span>
@@ -123,8 +171,12 @@
                             </div>
                         </div>
                         <div class="space-y-2 text-xs">
-                            <div class="flex justify-between items-center"><span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Vector</span> <span class="font-bold">70%</span></div>
-                            <div class="flex justify-between items-center"><span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-200"></span> Raster</span> <span class="font-bold">30%</span></div>
+                            <div class="flex justify-between items-center"><span class="flex items-center gap-2"><span
+                                        class="w-2 h-2 rounded-full bg-blue-500"></span> Vector</span> <span
+                                    class="font-bold">70%</span></div>
+                            <div class="flex justify-between items-center"><span class="flex items-center gap-2"><span
+                                        class="w-2 h-2 rounded-full bg-slate-200"></span> Raster</span> <span
+                                    class="font-bold">30%</span></div>
                         </div>
                     </div>
 
@@ -132,12 +184,19 @@
                         <h4 class="font-bold text-slate-700 mb-4">Status Layanan</h4>
                         <div class="space-y-4">
                             <div>
-                                <div class="flex justify-between text-xs mb-1 font-medium text-slate-500"><span>Supabase DB</span> <span id="db-status" class="text-orange-500">Waiting...</span></div>
-                                <div class="w-full bg-slate-100 h-2 rounded-full"><div id="db-status-dot" class="bg-orange-500 h-2 rounded-full" style="width: 100%"></div></div>
+                                <div class="flex justify-between text-xs mb-1 font-medium text-slate-500"><span>Supabase
+                                        DB</span> <span id="db-status" class="text-orange-500">Waiting...</span></div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full">
+                                    <div id="db-status-dot" class="bg-orange-500 h-2 rounded-full" style="width: 100%">
+                                    </div>
+                                </div>
                             </div>
                             <div>
-                                <div class="flex justify-between text-xs mb-1 font-medium text-slate-500"><span>GeoServer</span> <span class="text-green-600">Stable</span></div>
-                                <div class="w-full bg-slate-100 h-2 rounded-full"><div class="bg-green-500 h-2 rounded-full" style="width: 95%"></div></div>
+                                <div class="flex justify-between text-xs mb-1 font-medium text-slate-500">
+                                    <span>GeoServer</span> <span class="text-green-600">Stable</span></div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 95%"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,11 +221,16 @@
                 <div class="col-span-12 lg:col-span-3">
                     <div class="bg-white p-6 rounded-[24px] shadow-sm border border-slate-100 h-full">
                         <h3 class="font-bold mb-4 flex items-center gap-2 text-slate-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                            </svg>
                             Layer Manager
                         </h3>
                         <div class="mb-4">
-                             <input type="text" placeholder="Cari layer..." class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" placeholder="Cari layer..."
+                                class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div id="layer-list" class="sidebar-scroll space-y-1 h-[400px]">
                             <p class="text-xs text-slate-400">Memuat layer...</p>
@@ -178,16 +242,34 @@
                 <div class="col-span-12 lg:col-span-9">
                     <div class="bg-white p-2 rounded-[32px] shadow-xl border border-slate-50 relative h-[600px]">
                         <div id="map" class="h-full w-full rounded-[24px]"></div>
-                        
+
                         <!-- Floating Controls -->
                         <div class="absolute top-6 right-6 z-[1000] flex flex-col gap-2">
-                            <button onclick="map.zoomIn()" class="bg-white p-2 rounded-lg shadow-md hover:bg-slate-50 text-slate-700"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg></button>
-                            <button onclick="map.zoomOut()" class="bg-white p-2 rounded-lg shadow-md hover:bg-slate-50 text-slate-700"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" /></svg></button>
+                            <button onclick="map.zoomIn()"
+                                class="bg-white p-2 rounded-lg shadow-md hover:bg-slate-50 text-slate-700"><svg
+                                    xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                        clip-rule="evenodd" />
+                                </svg></button>
+                            <button onclick="map.zoomOut()"
+                                class="bg-white p-2 rounded-lg shadow-md hover:bg-slate-50 text-slate-700"><svg
+                                    xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg></button>
                         </div>
 
                         <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1000]">
-                            <button onclick="window.location.reload()" class="bg-white/90 backdrop-blur text-slate-700 px-6 py-2 rounded-full font-bold shadow-lg hover:bg-white flex items-center gap-2 border border-slate-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                            <button onclick="window.location.reload()"
+                                class="bg-white/90 backdrop-blur text-slate-700 px-6 py-2 rounded-full font-bold shadow-lg hover:bg-white flex items-center gap-2 border border-slate-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-600" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
                                 Reset View
                             </button>
                         </div>
@@ -201,26 +283,31 @@
             <div class="max-w-3xl mx-auto">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-extrabold text-slate-900 mb-4">Tentang Proyek</h2>
-                    <p class="text-slate-500">Informasi mengenai pengembangan SI</p>
+                    <p class="text-slate-500">Infrastruktur Data Spasial</p>
                 </div>
 
                 <div class="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
                     <div class="h-48 bg-gradient-to-r from-blue-600 to-indigo-600 relative">
-                        <div class="absolute inset-0 opacity-20" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+                        <div class="absolute inset-0 opacity-20"
+                            style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');">
+                        </div>
                         <div class="absolute -bottom-12 left-1/2 -translate-x-1/2">
                             <div class="w-24 h-24 bg-white rounded-full p-2 shadow-lg">
-                                <div class="w-full h-full bg-slate-100 rounded-full flex items-center justify-center text-3xl">🎓</div>
+                                <div
+                                    class="w-full h-full bg-slate-100 rounded-full flex items-center justify-center text-3xl">
+                                    🎓</div>
                             </div>
                         </div>
                     </div>
                     <div class="p-8 pt-16 text-center">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Tugas Kuliah Sistem Informasi Geografis</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Tugas Besar Infrastruktur Data Spasial</h3>
                         <p class="text-blue-600 font-medium mb-6">Semester Genap 2024/2025</p>
-                        
+
                         <div class="prose prose-slate mx-auto text-sm text-slate-500 mb-8">
                             <p>
-                                Aplikasi ini dikembangkan sebagai bagian dari pemenuhan tugas mata kuliah. 
-                                Bertujuan untuk memvisualisasikan data spasial wilayah Kabupaten Polewali Mandar, Provinsi Sulawesi Barat dengan menggunakan 
+                                Aplikasi ini dikembangkan sebagai bagian dari pemenuhan tugas mata kuliah.
+                                Bertujuan untuk memvisualisasikan data spasial wilayah Kabupaten Polewali Mandar,
+                                Provinsi Sulawesi Barat dengan menggunakan
                                 teknologi web modern (Leaflet JS) dan database cloud (Supabase).
                             </p>
                         </div>
@@ -228,15 +315,71 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                             <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
                                 <span class="text-xs font-bold text-slate-400 uppercase">Nama Mahasiswa</span>
-                                <p class="font-bold text-slate-800">Mahasiswa</p>
+                                <p class="font-bold text-slate-800">Muh Siradz Haningdya</p>
                             </div>
                             <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
                                 <span class="text-xs font-bold text-slate-400 uppercase">NIM</span>
-                                <p class="font-bold text-slate-800">12345678</p>
+                                <p class="font-bold text-slate-800">24/551702/PTK/16408</p>
                             </div>
                             <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
                                 <span class="text-xs font-bold text-slate-400 uppercase">Program Studi</span>
-                                <p class="font-bold text-slate-800">Teknik Informatika</p>
+                                <p class="font-bold text-slate-800">Megister Teknik Geomatika</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Nama Mahasiswa</span>
+                                <p class="font-bold text-slate-800">Rachmanita Isna Salsabella</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">NIM</span>
+                                <p class="font-bold text-slate-800">25/558516/PTK/16538</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Program Studi</span>
+                                <p class="font-bold text-slate-800">Megister Teknik Geomatika</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Nama Mahasiswa</span>
+                                <p class="font-bold text-slate-800">Zulfikar Baihakki Budiyono</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">NIM</span>
+                                <p class="font-bold text-slate-800">25/568388/PTK/16751</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Program Studi</span>
+                                <p class="font-bold text-slate-800">Megister Teknik Geomatika</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Nama Mahasiswa</span>
+                                <p class="font-bold text-slate-800">Yudha Febrian</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">NIM</span>
+                                <p class="font-bold text-slate-800">25/569179/PTK/16817</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Program Studi</span>
+                                <p class="font-bold text-slate-800">Megister Teknik Geomatika</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Nama Mahasiswa</span>
+                                <p class="font-bold text-slate-800">Riyana Ajizah</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">NIM</span>
+                                <p class="font-bold text-slate-800">25/569731/PTK/16946</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Program Studi</span>
+                                <p class="font-bold text-slate-800">Megister Teknik Geomatika</p>
                             </div>
                         </div>
                     </div>
@@ -262,25 +405,25 @@
         const analysisLayerGroup = L.featureGroup().addTo(map);
 
         // --- FUNGSI ANALISIS SPASIAL ---
-        
+
         async function runFasumAnalysis(feature, resultDiv) {
             resultDiv.classList.remove('hidden');
             resultDiv.innerHTML = '<div class="flex items-center gap-2 text-blue-600"><svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Menganalisis Buffer...</div>';
-            
+
             analysisLayerGroup.clearLayers();
-            
+
             try {
                 // 1. Create Buffers (5m, 10m, 15m)
                 const buffers = [15, 10, 5].map(dist => {
                     return {
                         dist: dist,
-                        geo: turf.buffer(feature, dist, {units: 'meters'})
+                        geo: turf.buffer(feature, dist, { units: 'meters' })
                     };
                 });
 
                 // Visualize Buffers
                 buffers.forEach(b => {
-                     L.geoJSON(b.geo, {
+                    L.geoJSON(b.geo, {
                         style: {
                             color: '#8b5cf6',
                             fillColor: '#8b5cf6',
@@ -289,7 +432,7 @@
                         }
                     }).addTo(analysisLayerGroup);
                 });
-                
+
                 // Zoom to largest buffer
                 map.fitBounds(L.geoJSON(buffers[0].geo).getBounds());
 
@@ -299,38 +442,38 @@
                     .from('fasilitas_umum_pt')
                     .select('namobj, remark, geom');
 
-                if(error) throw error;
+                if (error) throw error;
 
-                if(!fasumData || fasumData.length === 0) {
+                if (!fasumData || fasumData.length === 0) {
                     resultDiv.innerHTML = '<span class="text-slate-500">Data Fasum kosong.</span>';
                     return;
                 }
 
                 // 3. Spatial Query
                 const results = { 5: [], 10: [], 15: [] };
-                
+
                 fasumData.forEach(pt => {
-                    if(!pt.geom) return;
+                    if (!pt.geom) return;
                     try {
                         // FIX: Handle geom as object or string
                         const ptGeo = typeof pt.geom === 'string' ? JSON.parse(pt.geom) : pt.geom;
-                        
+
                         // Check smallest first (5m)
-                        if(turf.booleanPointInPolygon(ptGeo, buffers.find(b=>b.dist===5).geo)) {
+                        if (turf.booleanPointInPolygon(ptGeo, buffers.find(b => b.dist === 5).geo)) {
                             results[5].push(pt);
-                        } else if(turf.booleanPointInPolygon(ptGeo, buffers.find(b=>b.dist===10).geo)) {
+                        } else if (turf.booleanPointInPolygon(ptGeo, buffers.find(b => b.dist === 10).geo)) {
                             results[10].push(pt);
-                        } else if(turf.booleanPointInPolygon(ptGeo, buffers.find(b=>b.dist===15).geo)) {
+                        } else if (turf.booleanPointInPolygon(ptGeo, buffers.find(b => b.dist === 15).geo)) {
                             results[15].push(pt);
                         }
-                    } catch(e) { console.warn('Geo parse error', e); }
+                    } catch (e) { console.warn('Geo parse error', e); }
                 });
 
                 // 4. Render Result
                 let html = '<div class="space-y-2">';
-                
+
                 const renderList = (label, items) => {
-                    if(items.length === 0) return '';
+                    if (items.length === 0) return '';
                     return `
                         <div class="border-b border-slate-100 pb-1">
                             <div class="font-bold text-slate-700 text-[10px] mb-1">${label} (${items.length})</div>
@@ -344,15 +487,15 @@
                 html += renderList("Radius 0-5 Meter", results[5]);
                 html += renderList("Radius 5-10 Meter", results[10]);
                 html += renderList("Radius 10-15 Meter", results[15]);
-                
-                if(results[5].length === 0 && results[10].length === 0 && results[15].length === 0) {
+
+                if (results[5].length === 0 && results[10].length === 0 && results[15].length === 0) {
                     html += '<div class="text-slate-500 italic">Tidak ada fasum dalam radius 15m.</div>';
                 }
-                
+
                 html += '</div>';
                 resultDiv.innerHTML = html;
 
-            } catch(e) {
+            } catch (e) {
                 console.error(e);
                 resultDiv.innerHTML = '<span class="text-red-500">Gagal analisis. Cek console.</span>';
             }
@@ -361,9 +504,9 @@
         async function runBencanaAnalysis(feature, resultDiv) {
             resultDiv.classList.remove('hidden');
             resultDiv.innerHTML = '<div class="flex items-center gap-2 text-red-600"><svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Cek Overlay Bencana...</div>';
-            
+
             analysisLayerGroup.clearLayers();
-            
+
             try {
                 // Highlight Selected Feature
                 L.geoJSON(feature, {
@@ -372,52 +515,52 @@
 
                 // 2. Check Disaster Layers (Overlay / Intersection Only)
                 const disasterLayers = [
-                    'BANJIR_AR_25K', 'gempa_bumi_ar', 'gerakan_tanah_ar', 
+                    'BANJIR_AR_25K', 'gempa_bumi_ar', 'gerakan_tanah_ar',
                     'kekeringan_ar', 'tanah_longsor_ar', 'tsunami_ar'
                 ];
-                
+
                 let foundDisasters = [];
 
                 for (const layerId of disasterLayers) {
                     // Fetch data untuk cek interseksi
                     const { data, error } = await supabaseClient
                         .from(layerId)
-                        .select('namobj, remark, geom'); 
+                        .select('namobj, remark, geom');
 
-                    if(data) {
+                    if (data) {
                         data.forEach(d => {
-                             if(!d.geom) return;
-                             try {
-                                 // FIX: Handle geom as object or string
-                                 const dGeo = typeof d.geom === 'string' ? JSON.parse(d.geom) : d.geom;
-                                 
-                                 // CEK OVERLAY: Apakah feature berpotongan langsung dengan bencana?
-                                 if (turf.booleanIntersects(feature, dGeo)) {
-                                     const label = layersConfig.find(l => l.id === layerId)?.label || layerId;
-                                     const info = d.namobj || d.remark || '';
-                                     
-                                     foundDisasters.push({ label, info });
-                                     
-                                     // VISUALISASI: Tampilkan area bencana yang tumpang tindih
-                                     L.geoJSON(dGeo, {
-                                         style: {
-                                             color: '#ef4444',
-                                             fillColor: '#ef4444',
-                                             weight: 2,
-                                             fillOpacity: 0.3,
-                                             dashArray: '4, 4'
-                                         }
-                                     }).addTo(analysisLayerGroup).bindPopup(`<b class="text-red-600">⚠️ Area ${label}</b><br>${info}`);
-                                 }
-                             } catch(err) { console.warn(err); }
+                            if (!d.geom) return;
+                            try {
+                                // FIX: Handle geom as object or string
+                                const dGeo = typeof d.geom === 'string' ? JSON.parse(d.geom) : d.geom;
+
+                                // CEK OVERLAY: Apakah feature berpotongan langsung dengan bencana?
+                                if (turf.booleanIntersects(feature, dGeo)) {
+                                    const label = layersConfig.find(l => l.id === layerId)?.label || layerId;
+                                    const info = d.namobj || d.remark || '';
+
+                                    foundDisasters.push({ label, info });
+
+                                    // VISUALISASI: Tampilkan area bencana yang tumpang tindih
+                                    L.geoJSON(dGeo, {
+                                        style: {
+                                            color: '#ef4444',
+                                            fillColor: '#ef4444',
+                                            weight: 2,
+                                            fillOpacity: 0.3,
+                                            dashArray: '4, 4'
+                                        }
+                                    }).addTo(analysisLayerGroup).bindPopup(`<b class="text-red-600">⚠️ Area ${label}</b><br>${info}`);
+                                }
+                            } catch (err) { console.warn(err); }
                         });
                     }
                 }
 
-                if(foundDisasters.length > 0) {
+                if (foundDisasters.length > 0) {
                     // Zoom to fit analysis
                     const bounds = analysisLayerGroup.getBounds();
-                    if(bounds.isValid()) map.fitBounds(bounds);
+                    if (bounds.isValid()) map.fitBounds(bounds);
 
                     resultDiv.innerHTML = `
                         <div class="font-bold text-red-600 mb-1 border-b border-red-100 pb-1">⚠️ Terdeteksi Zona Bahaya:</div>
@@ -430,9 +573,9 @@
                     resultDiv.innerHTML = "<div class='text-green-600 font-bold bg-green-50 p-2 rounded text-center'>✅ Aman<br><span class='font-normal text-xs text-slate-500'>Lokasi ini tidak berada di zona rawan bencana yang terdata.</span></div>";
                 }
 
-            } catch(e) {
-                 console.error(e);
-                 resultDiv.innerHTML = '<span class="text-red-500">Gagal analisis bencana.</span>';
+            } catch (e) {
+                console.error(e);
+                resultDiv.innerHTML = '<span class="text-red-500">Gagal analisis bencana.</span>';
             }
         }
 
@@ -457,10 +600,10 @@
         function initApp() {
             const list = document.getElementById('layer-list');
             list.innerHTML = '';
-            
+
             // Update Dashboard Stats
             const totalLayerEl = document.getElementById('dash-total-layer');
-            if(totalLayerEl) totalLayerEl.innerText = layersConfig.length;
+            if (totalLayerEl) totalLayerEl.innerText = layersConfig.length;
 
             layersConfig.forEach(layer => {
                 const btn = document.createElement('div');
@@ -480,42 +623,42 @@
                 btn.onclick = () => toggleLayer(layer);
                 list.appendChild(btn);
             });
-            
+
             checkConnection();
         }
 
         async function checkConnection() {
-             const statusEl = document.getElementById('db-status');
-             const statusDot = document.getElementById('db-status-dot');
-             
-             if(statusEl) {
-                 statusEl.innerText = "Checking...";
-                 statusEl.className = "text-orange-500 font-bold";
-             }
-             
-             // Cek koneksi dengan simple query
-             const { data, error } = await supabaseClient.from('administrasi_ar').select('count', { count: 'exact', head: true });
-             
-             if(!error) {
-                 if(statusEl) {
-                     statusEl.innerText = "Online";
-                     statusEl.className = "text-green-600 font-bold";
-                 }
-                 if(statusDot) {
-                     statusDot.className = "bg-green-500 h-2 rounded-full";
-                     statusDot.style.width = "100%";
-                 }
-             } else {
-                 console.error("Connection check failed:", error);
-                 if(statusEl) {
-                     statusEl.innerText = "Error / Offline";
-                     statusEl.className = "text-red-600 font-bold";
-                 }
-                 if(statusDot) {
-                     statusDot.className = "bg-red-500 h-2 rounded-full";
-                     statusDot.style.width = "100%";
-                 }
-             }
+            const statusEl = document.getElementById('db-status');
+            const statusDot = document.getElementById('db-status-dot');
+
+            if (statusEl) {
+                statusEl.innerText = "Checking...";
+                statusEl.className = "text-orange-500 font-bold";
+            }
+
+            // Cek koneksi dengan simple query
+            const { data, error } = await supabaseClient.from('administrasi_ar').select('count', { count: 'exact', head: true });
+
+            if (!error) {
+                if (statusEl) {
+                    statusEl.innerText = "Online";
+                    statusEl.className = "text-green-600 font-bold";
+                }
+                if (statusDot) {
+                    statusDot.className = "bg-green-500 h-2 rounded-full";
+                    statusDot.style.width = "100%";
+                }
+            } else {
+                console.error("Connection check failed:", error);
+                if (statusEl) {
+                    statusEl.innerText = "Error / Offline";
+                    statusEl.className = "text-red-600 font-bold";
+                }
+                if (statusDot) {
+                    statusDot.className = "bg-red-500 h-2 rounded-full";
+                    statusDot.style.width = "100%";
+                }
+            }
         }
 
         function switchTab(tabName) {
@@ -523,25 +666,25 @@
             ['dashboard', 'peta', 'about'].forEach(t => {
                 const section = document.getElementById(`section-${t}`);
                 const nav = document.getElementById(`nav-${t}`);
-                if(section) section.classList.add('hidden');
-                if(nav) {
+                if (section) section.classList.add('hidden');
+                if (nav) {
                     nav.classList.remove('bg-blue-600', 'text-white');
                     nav.classList.add('text-slate-600');
                 }
             });
-            
+
             // Show selected section
             const targetSection = document.getElementById(`section-${tabName}`);
             const targetNav = document.getElementById(`nav-${tabName}`);
-            
-            if(targetSection) targetSection.classList.remove('hidden');
-            if(targetNav) {
+
+            if (targetSection) targetSection.classList.remove('hidden');
+            if (targetNav) {
                 targetNav.classList.remove('text-slate-600');
                 targetNav.classList.add('bg-blue-600', 'text-white');
             }
-            
+
             // Fix map rendering issues when unhidden
-            if(tabName === 'peta') {
+            if (tabName === 'peta') {
                 setTimeout(() => {
                     map.invalidateSize();
                 }, 200);
@@ -550,59 +693,59 @@
 
         // Helper: Warna Pola Ruang berdasarkan REMARK
         function getPolaRuangColor(remark) {
-             if(!remark) return '#64748b'; 
-             // Gunakan exact match sesuai request user
-             switch(remark) {
-                 case 'Holding Zone': return '#bada55';
-                 case 'Hutan Konservasi': return '#1a5d1a';
-                 case 'Hutan Kota': return '#22c55e';
-                 case 'Hutan Lindung (HL)': return '#166534';
-                 case 'Hutan Mangrove': return '#0d9488';
-                 case 'Hutan Produksi Terbatasi (HPT)': return '#5c6b2a';
-                 case 'Kawasan Perikanan Budidaya (Tambak)': return '#a855f7';
-                 case 'Kawasan Perkebunan': return '#d97706';
-                 case 'Kawasan Permukiman': return '#facc15';
-                 case 'Kawasan Pertanian Lahan Basah': return '#4ade80';
-                 case 'Kawasan Pertanian Lahan Kering': return '#84cc16';
-                 case 'Sempadan Pantai': return '#06b6d4';
-                 case 'Sempadan Sungai': return '#3b82f6';
-                 case 'Tubuh Air (Perairan)': return '#2563eb';
-                 default: return '#94a3b8'; // Default
-             }
+            if (!remark) return '#64748b';
+            // Gunakan exact match sesuai request user
+            switch (remark) {
+                case 'Holding Zone': return '#bada55';
+                case 'Hutan Konservasi': return '#1a5d1a';
+                case 'Hutan Kota': return '#22c55e';
+                case 'Hutan Lindung (HL)': return '#166534';
+                case 'Hutan Mangrove': return '#0d9488';
+                case 'Hutan Produksi Terbatasi (HPT)': return '#5c6b2a';
+                case 'Kawasan Perikanan Budidaya (Tambak)': return '#a855f7';
+                case 'Kawasan Perkebunan': return '#d97706';
+                case 'Kawasan Permukiman': return '#facc15';
+                case 'Kawasan Pertanian Lahan Basah': return '#4ade80';
+                case 'Kawasan Pertanian Lahan Kering': return '#84cc16';
+                case 'Sempadan Pantai': return '#06b6d4';
+                case 'Sempadan Sungai': return '#3b82f6';
+                case 'Tubuh Air (Perairan)': return '#2563eb';
+                default: return '#94a3b8'; // Default
+            }
         }
 
         // 4. Fungsi Toggle Layer (Aktif/Non-aktif)
         async function toggleLayer(layerConfig) {
             const layerId = layerConfig.id;
             const btn = document.getElementById(`btn-${layerId}`);
-            
+
             // --- NON-AKTIFKAN LAYER JIKA SUDAH ADA ---
             if (activeLayers[layerId]) {
                 // Remove layer from map
                 map.removeLayer(activeLayers[layerId].layer);
-                
+
                 // Remove legend
                 if (activeLayers[layerId].legend) {
-                     map.removeControl(activeLayers[layerId].legend);
+                    map.removeControl(activeLayers[layerId].legend);
                 }
-                
+
                 delete activeLayers[layerId];
-                
+
                 // Update UI: Inactive State
                 btn.classList.remove('bg-blue-50', 'border-blue-200');
                 const indicator = btn.querySelector('.status-indicator');
                 indicator.style.backgroundColor = ''; // Reset to class style (bg-slate-200)
                 indicator.classList.add('bg-slate-200');
-                
+
                 btn.querySelector('.check-icon svg').classList.add('hidden');
                 btn.querySelector('.check-icon').classList.remove('bg-blue-50', 'border-blue-500');
-                
+
                 return;
             }
 
             // --- AKTIFKAN LAYER ---
             console.log("Activating layer:", layerId);
-            
+
             // UI Loading State
             btn.classList.add('bg-blue-50');
             btn.style.cursor = 'wait';
@@ -655,9 +798,9 @@
 
                     // Determine Style
                     let layerStyle = { color: layerConfig.color, weight: 2, fillOpacity: 0.3 };
-                    
+
                     if (layerId === 'pola_ruang_ar') {
-                        layerStyle = function(feature) {
+                        layerStyle = function (feature) {
                             const color = getPolaRuangColor(feature.properties.remark);
                             return {
                                 color: color,
@@ -671,25 +814,25 @@
                     // Create GeoJSON Layer
                     const newLayer = L.geoJSON(geoJsonFeatures, {
                         style: layerStyle,
-                        onEachFeature: function(feature, layer) {
+                        onEachFeature: function (feature, layer) {
                             // Check if this layer supports analysis (Polygon layers usually)
                             const isAnalyzable = ['bidang_tanah_ar', 'pola_ruang_ar', 'administrasi_ar'].includes(layerId) || layerId.includes('_ar');
-                            
+
                             if (isAnalyzable) {
                                 // Enhanced Popup for Analyzable Layers
                                 const div = document.createElement('div');
                                 div.className = 'p-1 min-w-[240px]';
-                                
+
                                 // Attributes Section
                                 let attrHtml = `<h4 class="font-bold text-slate-700 border-b pb-2 mb-2 text-sm">${feature.properties.namobj || feature.properties.remark || 'Detail Objek'}</h4>
                                     <div style="max-height: 150px; overflow-y: auto; margin-bottom: 10px; font-size: 11px;" class="space-y-1">`;
-                                
+
                                 for (const [key, value] of Object.entries(feature.properties)) {
                                     if (['geom', 'geometry', 'shape_leng', 'shape_area', 'objectid', 'gid', 'id'].includes(key.toLowerCase())) continue;
                                     attrHtml += `<div class="grid grid-cols-3 gap-1"><span class="text-slate-400 font-medium truncate" title="${key}">${key}</span><span class="col-span-2 text-slate-700 break-words">${value}</span></div>`;
                                 }
                                 attrHtml += `</div>`;
-                                
+
                                 // Analysis Section
                                 const analysisDiv = document.createElement('div');
                                 analysisDiv.className = 'border-t pt-2 space-y-2';
@@ -725,7 +868,7 @@
                                 };
 
                                 layer.bindPopup(div);
-                            
+
                             } else {
                                 // Standard Popup for other layers (Points, Lines)
                                 if (feature.properties) {
@@ -744,10 +887,10 @@
 
                     // Create Legend Control for this specific layer
                     // We stack legends by creating a new control for each
-                    const legend = L.control({position: 'bottomright'});
+                    const legend = L.control({ position: 'bottomright' });
                     legend.onAdd = function (map) {
                         const div = L.DomUtil.create('div', 'bg-white p-2 rounded-lg shadow-md border border-slate-100 mb-2 text-xs');
-                        
+
                         if (layerId === 'pola_ruang_ar') {
                             div.innerHTML = `
                                 <h4 class="font-bold mb-2 text-slate-700">Legenda Pola Ruang</h4>
@@ -785,19 +928,19 @@
                         layer: newLayer,
                         legend: legend
                     };
-                    
+
                     // Update UI: Active State
                     btn.classList.add('bg-blue-50', 'border-blue-200');
                     const indicator = btn.querySelector('.status-indicator');
                     indicator.classList.remove('bg-slate-200');
                     indicator.style.backgroundColor = layerConfig.color;
-                    
+
                     btn.querySelector('.check-icon svg').classList.remove('hidden');
                     btn.querySelector('.check-icon').classList.add('bg-blue-50', 'border-blue-500');
 
                     // Zoom to new layer
                     map.fitBounds(newLayer.getBounds());
-                    
+
                 } catch (e) {
                     console.error("Global parsing error:", e);
                     alert("Data ditemukan, tapi format parsing error. Cek console.");
@@ -805,7 +948,7 @@
             } else {
                 alert("Tabel kosong.");
             }
-            
+
             // Reset cursor
             btn.style.cursor = 'pointer';
         }
@@ -813,4 +956,5 @@
         window.onload = initApp;
     </script>
 </body>
+
 </html>
