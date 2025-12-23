@@ -220,21 +220,44 @@
             <div class="grid grid-cols-12 gap-6">
                 <!-- Sidebar Peta -->
                 <div class="col-span-12 lg:col-span-3">
-                    <div class="bg-white p-6 rounded-[24px] shadow-sm border border-slate-100 h-full">
+                    <div class="bg-white p-6 rounded-[24px] shadow-sm border border-slate-100 h-full flex flex-col">
+
                         <h3 class="font-bold mb-4 flex items-center gap-2 text-slate-700">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                             </svg>
-                            Layer Manager
+                            Layer & Pencarian
                         </h3>
+
                         <div class="mb-4">
-                            <input type="text" placeholder="Cari layer..."
-                                class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Cari Bidang
+                                Tanah</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="input-nib" placeholder="Masukkan NIB (cth: 01167)"
+                                    class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    onkeypress="if(event.key === 'Enter') searchNIB()">
+
+                                <button onclick="searchNIB()" id="btn-search-nib"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-xl transition-colors shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                        <div id="layer-list" class="sidebar-scroll space-y-1 h-[400px]">
-                            <p class="text-xs text-slate-400">Memuat layer...</p>
+
+                        <hr class="border-slate-100 mb-4">
+
+                        <div class="flex-1 overflow-hidden">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase mb-2 block">Daftar
+                                Layer</label>
+                            <div id="layer-list" class="sidebar-scroll space-y-1 h-[320px] overflow-y-auto pr-1">
+                                <p class="text-xs text-slate-400">Memuat layer...</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -404,6 +427,8 @@
 
         const activeLayers = {}; // Store active layers and their controls: { id: { layer, legend } }
         const analysisLayerGroup = L.featureGroup().addTo(map);
+        // Untuk Buffer & Garis Bencana
+        const searchResultLayer = L.featureGroup().addTo(map);
 
         // --- FUNGSI ANALISIS SPASIAL ---
 
@@ -700,6 +725,149 @@
                 }
             }
         }
+
+        // --- FUNGSI SEARCH NIB ---
+        // --- FUNGSI HELPER: MEMBUAT KONTEN POPUP STANDAR ---
+        function createPopupContent(feature) {
+            const props = feature.properties;
+
+            // 1. Tentukan Judul Popup (Prioritas: NIB -> Namobj -> Remark -> Default)
+            let title = props.NIB || props.namobj || props.NAMOBJ || props.remark || props.REMARK || 'Detail Objek';
+
+            // 2. Buat Container Utama
+            const div = document.createElement('div');
+            div.className = 'p-1 min-w-[240px] font-sans';
+
+            // 3. Generate Tabel Atribut (Otomatis & Rapi)
+            let attrHtml = `
+        <div class="bg-slate-50 border-b border-slate-200 pb-2 mb-2">
+            <h4 class="font-bold text-slate-800 text-sm">${title}</h4>
+        </div>
+        <div style="max-height: 150px; overflow-y: auto; margin-bottom: 10px;" class="space-y-1 text-xs">`;
+
+            // Loop semua properties (kecuali geometri)
+            for (const [key, value] of Object.entries(props)) {
+                // Filter kolom teknis yang tidak perlu ditampilkan
+                if (['geom', 'geometry', 'shape_leng', 'shape_area', 'objectid', 'gid', 'id'].includes(key.toLowerCase())) continue;
+
+                attrHtml += `
+            <div class="grid grid-cols-3 gap-2 border-b border-slate-50 last:border-0 py-0.5">
+                <span class="text-slate-400 font-medium truncate uppercase text-[10px] tracking-wider" title="${key}">${key}</span>
+                <span class="col-span-2 text-slate-700 font-medium break-words">${value}</span>
+            </div>`;
+            }
+            attrHtml += `</div>`;
+
+            // 4. Tambahkan Bagian Tombol Analisis
+            // Kita gunakan class selector, bukan ID, untuk menghindari duplikat ID di DOM
+            const analysisHtml = `
+        <div class="border-t border-slate-100 pt-3 space-y-2">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Analisis Spasial</p>
+            <div class="grid grid-cols-2 gap-2">
+                <button class="btn-fasum bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs py-2 px-2 rounded-lg font-bold transition flex items-center justify-center gap-1 border border-blue-100">
+                    🏥 Fasum
+                </button>
+                <button class="btn-bencana bg-red-50 hover:bg-red-100 text-red-600 text-xs py-2 px-2 rounded-lg font-bold transition flex items-center justify-center gap-1 border border-red-100">
+                    🌋 Bencana
+                </button>
+            </div>
+            <div class="analysis-result hidden text-xs mt-2 bg-slate-50 p-2 rounded border border-slate-200 max-h-[150px] overflow-y-auto"></div>
+        </div>
+    `;
+
+            div.innerHTML = attrHtml + analysisHtml;
+
+            // 5. Pasang Event Listener ke Tombol
+            // (Penting: Kita pasang manual via JS agar scope function analisis terbaca)
+            const btnFasum = div.querySelector('.btn-fasum');
+            const btnBencana = div.querySelector('.btn-bencana');
+            const resultBox = div.querySelector('.analysis-result');
+
+            // Pastikan geometri feature tersedia dalam format Object untuk Turf.js
+            let geoForAnalysis = feature;
+            // Jika formatnya masih raw property 'geom' terpisah, gabungkan
+            if (!geoForAnalysis.geometry && (feature.geom || feature.properties.geom)) {
+                let g = feature.geom || feature.properties.geom;
+                if (typeof g === 'string') { try { g = JSON.parse(g); } catch (e) { } }
+                geoForAnalysis = { type: "Feature", properties: props, geometry: g };
+            }
+
+            if (btnFasum) {
+                btnFasum.onclick = (e) => {
+                    e.stopPropagation();
+                    runFasumAnalysis(geoForAnalysis, resultBox);
+                };
+            }
+
+            if (btnBencana) {
+                btnBencana.onclick = (e) => {
+                    e.stopPropagation();
+                    runBencanaAnalysis(geoForAnalysis, resultBox);
+                };
+            }
+
+            return div;
+        }
+
+        async function searchNIB() {
+            const inputEl = document.getElementById('input-nib');
+            const btnEl = document.getElementById('btn-search-nib');
+            const nibValue = inputEl.value.trim();
+
+            if (!nibValue) { alert("Mohon masukkan nomor NIB."); return; }
+
+            const originalBtn = btnEl.innerHTML;
+            btnEl.innerHTML = '<svg class="animate-spin h-5 w-5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            btnEl.disabled = true;
+
+            try {
+                const { data: feature, error } = await supabaseClient
+                    .from('bidang_tanah_ar')
+                    .select('*')
+                    .eq('NIB', nibValue)
+                    .limit(1)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                if (!feature) {
+                    alert(`NIB "${nibValue}" tidak ditemukan.`);
+                } else {
+                    // PERBAIKAN DISINI:
+                    // 1. Bersihkan hasil pencarian sebelumnya
+                    searchResultLayer.clearLayers();
+                    // 2. Bersihkan juga hasil analisis lama (buffer, dll) biar bersih
+                    analysisLayerGroup.clearLayers();
+
+                    let geometry = feature.geom;
+                    if (typeof geometry === 'string') { try { geometry = JSON.parse(geometry); } catch (e) { } }
+
+                    if (geometry) {
+                        const geoJsonFeature = { type: "Feature", properties: feature, geometry: geometry };
+
+                        // 3. Masukkan ke searchResultLayer (JANGAN ke analysisLayerGroup)
+                        const searchLayer = L.geoJSON(geoJsonFeature, {
+                            style: { color: '#ef4444', weight: 4, fillColor: '#f59e0b', fillOpacity: 0.4 }
+                        }).addTo(searchResultLayer); // <--- Ganti variable ini
+
+                        // Gunakan fungsi helper createPopupContent yang sudah dibuat sebelumnya
+                        const popupContent = createPopupContent(geoJsonFeature);
+                        searchLayer.bindPopup(popupContent);
+
+                        map.fitBounds(searchLayer.getBounds(), { maxZoom: 19 });
+                        setTimeout(() => searchLayer.openPopup(), 500);
+                    } else {
+                        alert("Data ditemukan tapi tanpa koordinat peta.");
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Terjadi kesalahan sistem.");
+            } finally {
+                btnEl.innerHTML = originalBtn;
+                btnEl.disabled = false;
+            }
+        }
         // --- FUNGSI BARU: DOWNLOAD LAYER ---
         async function downloadLayer(event, layerId, layerLabel) {
             // Mencegah trigger toggleLayer saat tombol download diklik
@@ -897,6 +1065,7 @@
             }
 
             if (data && data.length > 0) {
+                console.log(data, "data response")
                 // Konversi data ke format Leaflet
                 try {
                     const geoJsonFeatures = data.map(d => {
